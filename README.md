@@ -1,1 +1,7 @@
-# fetch-quest
+# FETCH QUEST
+******
+
+Team members: Rich, Bob, Dereck, Vadim
+
+****
+
