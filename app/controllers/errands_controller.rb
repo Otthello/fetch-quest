@@ -1,8 +1,8 @@
-class ErrandsController < ApplicationController
+class ErrandsController < ApiController
   before_filter :cors_header_check
   def index
-    @errands = Errands.all
-    render json: @errands
+    errands = Errands.all
+    render json: {status: 'SUCCESS', message: 'Loaded all errands', data: errands}, status: :ok
   end
 
   def create
@@ -12,9 +12,14 @@ class ErrandsController < ApplicationController
       npc_id: 1,
       hero_id: 1,
       completed: false
-    }
-    errand_info[:lat] = params[:coords].latitude
-    errand_info[:lng] = parrams[:coords].longitude
+    }p "params"
+    p params
+    p "lat"
+    p params[:coords][:latitude]
+    p "longe"
+    params[:coords][:longitude]
+    errand_info[:lat] = params[:coords][:latitude]
+    errand_info[:lng] = params[:coords][:longitude]
     @errand = Errands.new(errand_info)
     if @errand.save
       status 200

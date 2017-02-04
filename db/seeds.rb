@@ -4,7 +4,6 @@ module BasicSeeder
     user_info = {
       username: "VargouilleSupreme",
       avatar_url: "http://i.imgur.com/9zxJla4.png",
-      password: "password",
       email: "test@test.com"
     }
     User.create(user_info)
@@ -12,7 +11,7 @@ module BasicSeeder
 
   def self.npcs
     npc_info = {
-      avatar_url: "http://i.imgur.com/DWTH8wm.png"
+      avatar_url: "http://i.imgur.com/DWTH8wm.png",
       name: "Ken the Paladin"
     }
     Npc.create(npc_info)
@@ -21,7 +20,7 @@ module BasicSeeder
   def self.quests
     quest_info = {
       image_url: "http://i.imgur.com/NlZj5vv.gif",
-      hook: "I don't like that castle."
+      hook: "I don't like that castle.",
       description: "Ken doesn't like that castle. Destroy it and he'll give you sweet loot"
     }
     Quest.create(quest_info)
@@ -41,8 +40,8 @@ module BasicSeeder
   def self.errands
     errand_info = {
       task: "Buy snacks from target",
-      lat:
-      lng:
+      lat: "41.876953",
+      lng: "-87.655314",
       quest_id: 1,
       npc_id: 1,
       hero_id: 1,
