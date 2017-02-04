@@ -6,7 +6,7 @@ class ErrandsController < ApplicationController
 
   def create
     errand_info = {
-      task: ['Eat a ', ["bagel","sandwich","pile of nails", "bag of salt"].sample].join('')
+      task: ['Eat a ', ["bagel","sandwich","pile of nails", "bag of salt"].sample].join(''),
       quest_id: 1,
       npc_id: 1,
       hero_id: 1,
