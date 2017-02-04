@@ -19,7 +19,7 @@ class ErrandsController < ApiController
     @errand = Errand.new(errand_info)
     if @errand.save
       p "sending 200"
-      status 200
+      render nothing: true, status: :ok
     else
       p "sending 422"
       status 422
