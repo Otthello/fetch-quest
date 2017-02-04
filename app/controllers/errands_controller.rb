@@ -15,10 +15,6 @@ class ErrandsController < ApiController
     }
     p "params"
     p params
-    p "lat"
-    p params[:coords][:latitude]
-    p "longe"
-    params[:coords][:longitude]
     errand_info[:lat] = params[:coords][:latitude]
     errand_info[:lng] = params[:coords][:longitude]
     @errand = Errands.new(errand_info)
