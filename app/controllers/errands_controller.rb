@@ -1,4 +1,5 @@
 class ErrandsController < ApplicationController
+  before_filter :cors_header_check
   def index
     @errands = Errands.all
     render json: @errands
@@ -20,5 +21,12 @@ class ErrandsController < ApplicationController
     else
       status 422
     end
+  end
+
+  def cors_header_check
+    headers['Access-Control-Allow-Origin'] = '*'
+    headers['Access-Control-Allow-Methods'] = 'POST, GET'
+    headers['Access-Control-Request-Method'] = '*'
+    headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
   end
 end
