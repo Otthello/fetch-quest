@@ -24,7 +24,7 @@ class ErrandsController < ApiController
     errand_info[:lng] = params[:longitude]
     p "stored lng"
     p "creating errand obj"
-    @errand = Errands.new(errand_info)
+    @errand = Errand.new(errand_info)
     p "errand: #{@errand}"
     if @errand.save
       p "sending 200"
