@@ -25,7 +25,8 @@ class ErrandsController < ApiController
     p "stored lng"
     p "creating errand obj"
     @errand = Errand.new(errand_info)
-    p "errand: #{@errand}"
+    p "errand: #{@errand.inspect}"
+
     if @errand.save
       p "sending 200"
       status 200
