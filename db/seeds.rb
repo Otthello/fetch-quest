@@ -1,7 +1,71 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
-#
-# Examples:
-#
-#   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
-#   Mayor.create(name: 'Emanuel', city: cities.first)
+module BasicSeeder
+
+  def self.users
+    user_info = {
+      username: "VargouilleSupreme",
+      avatar_url: "http://i.imgur.com/9zxJla4.png",
+      password: "password",
+      email: "test@test.com"
+    }
+    User.create(user_info)
+  end
+
+  def self.npcs
+    npc_info = {
+      avatar_url: "http://i.imgur.com/DWTH8wm.png"
+      name: "Ken the Paladin"
+    }
+    Npc.create(npc_info)
+  end
+
+  def self.quests
+    quest_info = {
+      image_url: "http://i.imgur.com/NlZj5vv.gif",
+      hook: "I don't like that castle."
+      description: "Ken doesn't like that castle. Destroy it and he'll give you sweet loot"
+    }
+    Quest.create(quest_info)
+  end
+
+  def self.items
+    item_info = {
+      slot: 1,
+      rarity: 2,
+      image_url: "http://i.imgur.com/9jqJu7s.png",
+      description: "Sweet hat brah",
+      name: "Pointy hat"
+    }
+    Item.create(item_info)
+  end
+
+  def self.errands
+    errand_info = {
+      task: "Buy snacks from target",
+      lat:
+      lng:
+      quest_id: 1,
+      npc_id: 1,
+      hero_id: 1,
+      completed: 0
+    }
+    Errand.create(errand_info)
+  end
+
+  def self.equip
+    equip_info = {
+      owner_id: 1,
+      lootable_id: 1,
+      lootable_type: 'Item'
+    }
+    Equip.create(equip_info)
+  end
+
+  def self.run_all
+    self.users
+    self.quests
+    self.npcs
+    self.errands
+    self.items
+    self.equips
+  end
+end
