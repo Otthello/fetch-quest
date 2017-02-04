@@ -18,10 +18,10 @@ class ErrandsController < ApiController
     p "params"
     p params
     p "storing lat"
-    errand_info[:lat] = params[:coords][:latitude]
+    errand_info[:lat] = params[:latitude]
     p "stored lat"
     p "storing lng"
-    errand_info[:lng] = params[:coords][:longitude]
+    errand_info[:lng] = params[:longitude]
     p "stored lng"
     p "creating errand obj"
     @errand = Errands.new(errand_info)
