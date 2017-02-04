@@ -12,7 +12,8 @@ class ErrandsController < ApiController
       npc_id: 1,
       hero_id: 1,
       completed: false
-    }p "params"
+    }
+    p "params"
     p params
     p "lat"
     p params[:coords][:latitude]
