@@ -9,6 +9,8 @@ class ErrandsController < ApiController
     errand_info = {
       task: ['Eat a ', ["bagel","sandwich","pile of nails", "bag of salt"].sample].join(''),
       quest_id: 1,
+      lat: "",
+      lng: "",
       npc_id: 1,
       hero_id: 1,
       completed: false
