@@ -15,18 +15,8 @@ class ErrandsController < ApiController
       hero_id: 1,
       completed: false
     }
-    p "params"
-    p params
-    p "storing lat"
     errand_info[:lat] = params[:latitude]
-    p "stored lat"
-    p "storing lng"
-    errand_info[:lng] = params[:longitude]
-    p "stored lng"
-    p "creating errand obj"
     @errand = Errand.new(errand_info)
-    p "errand: #{@errand.inspect}"
-
     if @errand.save
       p "sending 200"
       status 200
