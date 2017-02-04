@@ -18,9 +18,12 @@ class ErrandsController < ApiController
     errand_info[:lat] = params[:coords][:latitude]
     errand_info[:lng] = params[:coords][:longitude]
     @errand = Errands.new(errand_info)
+    p "errand: #{@errand}"
     if @errand.save
+      p "sending 200"
       status 200
     else
+      p "sending 422"
       status 422
     end
   end
