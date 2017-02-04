@@ -1,7 +1,8 @@
 class ErrandsController < ApiController
   before_filter :cors_header_check
+
   def index
-    errands = Errands.all
+    errands = Errand.first
     render json: {status: 'SUCCESS', message: 'Loaded all errands', data: errands}, status: :ok
   end
 
@@ -15,7 +16,10 @@ class ErrandsController < ApiController
       hero_id: 1,
       completed: false
     }
+    p "params"
+    p params
     errand_info[:lat] = params[:latitude]
+    errand_info[:lng] = params[:longitude]
     @errand = Errand.new(errand_info)
     if @errand.save
       p "sending 200"
