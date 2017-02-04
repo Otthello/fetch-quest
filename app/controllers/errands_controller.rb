@@ -2,7 +2,9 @@ class ErrandsController < ApiController
   before_filter :cors_header_check
 
   def index
+    p "ENTER INDEX"
     errands = Errand.first
+    p "errand"
     render json: {status: 'SUCCESS', message: 'Loaded all errands', data: errands}, status: :ok
   end
 
