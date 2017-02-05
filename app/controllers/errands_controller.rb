@@ -1,4 +1,6 @@
 class ErrandsController < ApiController
+  include QuestsHelper
+  include NpcsHelper
   before_filter :cors_header_check
 
   def index
@@ -9,19 +11,20 @@ class ErrandsController < ApiController
   end
 
   def create
+    p "Posting an errand"
+    p "***** PARAMS *****"
+    p params
     errand_info = {
-      task: ['Eat a ', ["bagel","sandwich","pile of nails", "bag of salt"].sample].join(''),
-      quest_id: 1,
-      lat: "",
-      lng: "",
-      npc_id: 1,
-      hero_id: 1,
+      task: params[:task],
+      quest_id: get_rand_quest.id,
+      lat: params[:latitude],
+      lng: params[:longitude],
+      npc_id: get_rand_npc.id,
+      hero_id: get_user.id,
       completed: false
     }
-    p "params"
-    p params
-    errand_info[:lat] = params[:latitude]
-    errand_info[:lng] = params[:longitude]
+    p "** errand_info **"
+    p errand_info
     @errand = Errand.new(errand_info)
     if @errand.save
       p "sending 200"
