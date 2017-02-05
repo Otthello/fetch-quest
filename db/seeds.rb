@@ -4,7 +4,8 @@ module BasicSeeder
     user_info = {
       username: "VargouilleSupreme",
       avatar_url: "http://i.imgur.com/9zxJla4.png",
-      email: "test@test.com"
+      email: "test@test.com",
+      password:"test"
     }
     User.create(user_info)
   end
@@ -19,7 +20,7 @@ module BasicSeeder
 
   def self.quests
     quest_info = {
-      image_url: "http://i.imgur.com/NlZj5vv.gif",
+      icon_url: "http://i.imgur.com/NlZj5vv.gif",
       hook: "I don't like that castle.",
       description: "Ken doesn't like that castle. Destroy it and he'll give you sweet loot"
     }
@@ -50,13 +51,23 @@ module BasicSeeder
     Errand.create(errand_info)
   end
 
-  def self.equip
+  def self.equips
     equip_info = {
       owner_id: 1,
       lootable_id: 1,
       lootable_type: 'Item'
     }
     Equip.create(equip_info)
+  end
+
+  def self.apikey
+    test = Apikey.new(email: "test@tester.com")
+    test.save
+    puts "/"* 50
+    puts "YOUR KEY DON'T LOSE IT!!!!"
+    puts "/"* 50
+    puts test.access_token
+    puts "/"* 50
   end
 
   def self.run_all
@@ -66,5 +77,9 @@ module BasicSeeder
     self.errands
     self.items
     self.equips
+    self.apikey
   end
 end
+
+BasicSeeder.run_all
+

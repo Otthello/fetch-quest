@@ -1,34 +1,62 @@
 class ErrandsController < ApiController
+
+  include ErrandsHelper
+  include QuestsHelper
+  include NpcsHelper
+
   before_filter :cors_header_check
 
   def index
-    p "ENTER INDEX"
-    errands = Errand.first
-    p "errand"
-    render json: {status: 'SUCCESS', message: 'Loaded all errands', data: errands}, status: :ok
-  end
-
-  def create
-    errand_info = {
-      task: ['Eat a ', ["bagel","sandwich","pile of nails", "bag of salt"].sample].join(''),
-      quest_id: 1,
-      lat: "",
-      lng: "",
-      npc_id: 1,
-      hero_id: 1,
-      completed: false
-    }
-    p "params"
-    p params
-    errand_info[:lat] = params[:latitude]
-    errand_info[:lng] = params[:longitude]
-    @errand = Errand.new(errand_info)
-    if @errand.save
-      p "sending 200"
-      render nothing: true, status: :ok
+    p "In Index"
+    errands = get_user_errands
+    # errands = User.first.errands
+    p errands
+    p "These are the errands for the user"
+    if errands.length > 0
+      render json: {status: 'SUCCESS', message: 'Loaded all errands', data: errands}, status: :ok
+      # render json: {status: 'SUCCESS', message: 'Loaded all errands', data: errands}, status: :ok
     else
       p "sending 422"
       status 422
+    end
+  end
+
+  def create
+    p "Posting an errand"
+    p "***** PARAMS *****"
+    p params
+    errand_info = {
+      task: params[:task],
+      quest_id: get_rand_quest.id,
+      lat: params[:latitude],
+      lng: params[:longitude],
+      npc_id: get_rand_npc.id,
+      hero_id: get_user.id,
+      completed: false
+    }
+
+    p "** errand_info **"
+    p errand_info
+    errand = Errand.new(errand_info)
+    if errand.save
+      puts "Saving valid errand"
+      render nothing: true, status: :ok
+    else
+      puts "Failed #{errand.errors.full_messages}"
+      render nothing: true, status: :bad_request
+    end
+  end
+
+  def update
+    errand = Errand.find_by(id: params[:id])
+    if errand
+      errand.completed = 1
+      errand.save
+      puts "Updated errand to completed"
+      render nothing: true, status: :ok
+    else
+      puts "Failed #{errand.errors.full_messages}"
+      render nothing: true, status: :bad_request
     end
   end
 
