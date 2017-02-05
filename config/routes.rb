@@ -1,10 +1,10 @@
 Rails.application.routes.draw do
+  get 'users/create'
+
   scope '/api' do
     scope '/v1' do
-      get '/hello' => 'tests#hello'
-      scope '/test' do
         resources :errands, :only => [:create, :index]
-      end
+        post '/users', to: 'users#create'
     end
   end
 end
