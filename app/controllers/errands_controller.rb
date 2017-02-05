@@ -1,9 +1,12 @@
 class ErrandsController < ApiController
+  include ErrandsHelper
+
   before_filter :cors_header_check
 
   def index
     p "In Index"
-    errands = get_user.errands
+    # errands = get_user.errands
+    errands = User.first.errands
     p errands
     p "These are the errands for the user"
     if errands.length > 0
@@ -11,7 +14,7 @@ class ErrandsController < ApiController
       # render json: {status: 'SUCCESS', message: 'Loaded all errands', data: errands}, status: :ok
     else
       p "sending 422"
-      status: 422
+      status 422
     end
   end
 
