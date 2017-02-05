@@ -1,4 +1,10 @@
 class ApiController < ApplicationController
+  skip_before_action :verify_access_token
+
+  def verify_access_token
+    Apikey.exists?({access_token: params[:key]})
+  end
+  
   def require_login
     authenticate_token || render_unauthorized("Access Denied")
   end
@@ -25,5 +31,6 @@ class ApiController < ApplicationController
         user
       end
     end
+
   end
 end

@@ -22,13 +22,26 @@ class ErrandsController < ApiController
     p params
     errand_info[:lat] = params[:latitude]
     errand_info[:lng] = params[:longitude]
-    @errand = Errand.new(errand_info)
-    if @errand.save
-      p "sending 200"
+    errand = Errand.new(errand_info)
+    if errand.save
+      puts "Saving valid errand"
       render nothing: true, status: :ok
     else
-      p "sending 422"
-      status 422
+      puts "Failed #{errand.errors.full_messages}"
+      render nothing: true, status: :bad_request
+    end
+  end
+
+  def update
+    errand = Errand.find_by(id: params[:id])
+    if errand
+      errand.completed = 1
+      errand.save
+      puts "Updated errand to completed"
+      render nothing: true, status: :ok
+    else
+      puts "Failed #{errand.errors.full_messages}"
+      render nothing: true, status: :bad_request
     end
   end
 
