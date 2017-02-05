@@ -11,7 +11,7 @@ class UsersController < ApiController
 
   def auth
     user = User.find_by(email: params[:email])
-    p user
+    # p user
     if user
      render json: {user_token: user.auth_token}.to_json, status: :ok
     else
