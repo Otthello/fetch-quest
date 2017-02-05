@@ -28,7 +28,7 @@ class ErrandsController < ApiController
       render nothing: true, status: :ok
     else
       p "sending 422"
-      status 422
+      render nothing: true, status: :bad_request
     end
   end
 

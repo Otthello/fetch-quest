@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  get 'users/create'
 
   scope '/api' do
     scope '/v1' do
