@@ -4,7 +4,8 @@ module BasicSeeder
     user_info = {
       username: "VargouilleSupreme",
       avatar_url: "http://i.imgur.com/9zxJla4.png",
-      email: "test@test.com"
+      email: "test@test.com",
+      password:"test"
     }
     User.create(user_info)
   end
