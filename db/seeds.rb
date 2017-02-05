@@ -19,7 +19,7 @@ module BasicSeeder
 
   def self.quests
     quest_info = {
-      image_url: "http://i.imgur.com/NlZj5vv.gif",
+      icon_url: "http://i.imgur.com/NlZj5vv.gif",
       hook: "I don't like that castle.",
       description: "Ken doesn't like that castle. Destroy it and he'll give you sweet loot"
     }
@@ -50,7 +50,7 @@ module BasicSeeder
     Errand.create(errand_info)
   end
 
-  def self.equip
+  def self.equips
     equip_info = {
       owner_id: 1,
       lootable_id: 1,
@@ -68,3 +68,5 @@ module BasicSeeder
     self.equips
   end
 end
+
+BasicSeeder.run_all
