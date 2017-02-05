@@ -4,7 +4,8 @@ module BasicSeeder
     user_info = {
       username: "VargouilleSupreme",
       avatar_url: "http://i.imgur.com/9zxJla4.png",
-      email: "test@test.com"
+      email: "test@test.com",
+      password:"test"
     }
     User.create(user_info)
   end
@@ -59,6 +60,16 @@ module BasicSeeder
     Equip.create(equip_info)
   end
 
+  def self.apikey
+    test = Apikey.new(email: "test@tester.com")
+    test.save
+    puts "/"* 50
+    puts "YOUR KEY DON'T LOSE IT!!!!"
+    puts "/"* 50
+    puts test.access_token
+    puts "/"* 50
+  end
+
   def self.run_all
     self.users
     self.quests
@@ -66,11 +77,9 @@ module BasicSeeder
     self.errands
     self.items
     self.equips
+    self.apikey
   end
 end
 
 BasicSeeder.run_all
-
-
-
 
