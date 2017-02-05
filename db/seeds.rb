@@ -82,3 +82,4 @@ module BasicSeeder
 end
 
 BasicSeeder.run_all
+

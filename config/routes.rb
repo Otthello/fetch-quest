@@ -10,4 +10,7 @@ Rails.application.routes.draw do
 
     end
   end
+
+  get 'errands',  to: 'errands#index'
+
 end

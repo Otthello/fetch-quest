@@ -1,4 +1,8 @@
 class User < ActiveRecord::Base
+  has_many :errands, foreign_key: 'hero_id'
+  has_many :equips
+  has_many :quests, through: :errands
+
  has_secure_password
  has_secure_token :auth_token
  after_validation :date_that_token

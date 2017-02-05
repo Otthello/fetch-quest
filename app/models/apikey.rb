@@ -7,3 +7,4 @@ class Apikey < ActiveRecord::Base
       self.access_token = SecureRandom.hex
     end
 end
+
