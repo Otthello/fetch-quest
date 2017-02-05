@@ -5,8 +5,8 @@ class ErrandsController < ApiController
 
   def index
     p "In Index"
-    # errands = get_user.errands
-    errands = User.first.errands
+    errands = get_user_errands
+    # errands = User.first.errands
     p errands
     p "These are the errands for the user"
     if errands.length > 0
