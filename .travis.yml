@@ -6,5 +6,5 @@ rvm:
 env:
   - DB=postgresql
 script:
-  - rake db:migrate
-  - rake db:test:prepare
+  - be rake db:migrate
+  - be rake db:test:prepare
