@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe ErrandsController, type: :controller do
+  let(:api){Apikey.create!(email: 'r@spec.co')}
   let(:create_errand){
     Errand.create!({
       task: "Buy snacks from target",
@@ -30,9 +31,7 @@ RSpec.describe ErrandsController, type: :controller do
     it "returns http success" do
       create_quest
       create_npc
-      p "QUEST COUNT*********************************************"
-      p "#{Quest.all.inspect}"
-      post :create, :latitude=>"#{errand_data[:latitude]}", :longitude => "#{errand_data[:longitude]}", :task => "#{errand_data[:task]}"
+      post :create, :key => "#{api.access_token}", :latitude=>"#{errand_data[:latitude]}", :longitude => "#{errand_data[:longitude]}", :task => "#{errand_data[:task]}"
       expect(response).to have_http_status(:success)
     end
   end
