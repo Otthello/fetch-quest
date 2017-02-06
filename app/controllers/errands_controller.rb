@@ -10,8 +10,13 @@ class ErrandsController < ApiController
     if user
       puts 'User found'
       if user.errands.length > 0
-        puts 'Errands found'
-        render json: {status: 'SUCCESS', message: 'Loaded all errands', data: user.errands}, status: :ok
+          puts 'Errands found'
+        if params[:options] == 'location'
+          puts 'Location option recognized'
+          render json: {status: 'SUCCESS', message: 'Loaded all errands and locations', data: user.incompleted_errand_locations}, status: :ok
+        else
+          render json: {status: 'SUCCESS', message: 'Loaded all errands and quests', data: user.errands_and_quests}, status: :ok
+        end
       else
         puts "Errands not found"
         render nothing: true, status: :bad_request

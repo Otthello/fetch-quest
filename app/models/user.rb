@@ -31,4 +31,23 @@ class User < ActiveRecord::Base
   def logout
     invalidate_token
   end
+
+  def incompleted_errand_locations
+    self.errands.where(completed: 0).collect{|errand| {lat: errand.lat, lng: errand.lng, hook: errand.quest.hook, npc_thumb: errand.npc.avatar_url}}
+  end
+
+  def errands_and_quests
+    self.errands.collect do |errand|
+       quest = errand.quest
+       npc = errand.npc
+       data = {
+        task: errand.task,
+        completed: errand.completed,
+        updated_at: errand.updated_at,
+        quest_description: quest.description,
+        npc_avatar_url: npc.avatar_url,
+        npc_name: npc.name
+      }
+    end
+  end
 end
