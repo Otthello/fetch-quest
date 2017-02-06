@@ -1,6 +1,6 @@
 class ApiController < ApplicationController
   skip_before_action :verify_access_token
-  before_filter :cors_header_check
+  # before_filter :cors_header_check
 
   def verify_access_token
     Apikey.exists?({access_token: params[:key]})
