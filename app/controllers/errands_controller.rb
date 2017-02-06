@@ -12,11 +12,24 @@ class ErrandsController < ApiController
     # errands = User.first.errands
     p user
     p "USER"
-    p user.errands
-    p "These are the errands for the user"
+    errands_array = []
+    user.errands.each do |errand|
+      quest = errand.quest
+      npc = errand.npc
+      data = {task: errand.task,
+        completed: errand.completed,
+        updated_at: errand.updated_at,
+        quest_description: quest.description,
+        npc_avatar_url: npc.avatar_url,
+        npc_name: npc.name
+      }
+      errands_array << data
+    end
+    p errands_array
+    p "^^^^^^^^^^^^^^^^^^^ Errands Array ^^^^^^^^^^^^^^^^^^^"
     if user.errands.length > 0
-      render json: {status: 'SUCCESS', message: 'Loaded all errands', data: user.errands}, status: :ok
-      # render json: {status: 'SUCCESS', message: 'Loaded all errands', data: errands}, status: :ok
+      render json: {status: 'SUCCESS', message: 'Loaded all errands', data: errands_array}, status: :ok
+      # render json: {status: 'SUCCESS', message: 'Loaded all errands', data: user.errands}, status: :ok
     else
       p "sending 422"
       status 422
