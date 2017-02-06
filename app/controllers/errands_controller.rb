@@ -1,65 +1,79 @@
 class ErrandsController < ApiController
-
+  before_action :require_login
   include ErrandsHelper
   include QuestsHelper
   include NpcsHelper
+  include UsersHelper
 
   def index
-    p "In Index"
-    p params
-    p "Params Above!!"
-    user = User.find_by(auth_token: params[:key])
-    # errands = User.first.errands
-    p user
-    p "USER"
-    p user.errands
-    p "These are the errands for the user"
-    if user.errands.length > 0
-      render json: {status: 'SUCCESS', message: 'Loaded all errands', data: user.errands}, status: :ok
-      # render json: {status: 'SUCCESS', message: 'Loaded all errands', data: errands}, status: :ok
+    user = get_user
+    if user
+      puts 'User found'
+      if user.errands.length > 0
+        puts 'Errands found'
+        render json: {status: 'SUCCESS', message: 'Loaded all errands', data: user.errands}, status: :ok
+      else
+        puts "Errands not found"
+        render nothing: true, status: :bad_request
+      end
+
     else
-      p "sending 422"
-      status 422
+      puts 'User not found'
+      render nothing: true, status: :bad_request
     end
   end
 
   def create
-    p "Posting an errand"
-    p "***** PARAMS *****"
-    p params
-    errand_info = {
-      task: params[:task],
-      quest_id: get_rand_quest.id,
-      lat: params[:latitude],
-      lng: params[:longitude],
-      npc_id: get_rand_npc.id,
-      hero_id: get_user.id,
-      completed: false
-    }
+    user = get_user
+    if user
+      puts 'User found'
 
-    p "** errand_info **"
-    p errand_info
-    errand = Errand.new(errand_info)
-    if errand.save
-      puts "Saving valid errand"
-      render nothing: true, status: :ok
+      errand_info_hash = {
+        task: params[:task],
+        quest_id: get_rand_quest.id,
+        lat: params[:latitude],
+        lng: params[:longitude],
+        npc_id: get_rand_npc.id,
+        hero_id: user.id,
+        completed: false
+      }
+
+      puts ["Making a new errand with values:", "\n", "#{errand_info_hash}"].join("")
+      errand = Errand.new(errand_info_hash)
+      if errand.save
+        puts "Saving valid errand"
+        render nothing: true, status: :ok
+      else
+        puts "Failed #{errand.errors.full_messages}"
+        render nothing: true, status: :bad_request
+      end
     else
-      puts "Failed #{errand.errors.full_messages}"
+      puts 'User not found'
       render nothing: true, status: :bad_request
     end
   end
 
   def update
-    p params
-    p "Params Above!!"
-    errand = Errand.find_by(id: params[:id])
-    if errand
-      errand.completed = 1
-      errand.save
-      puts "Updated errand to completed"
-      render nothing: true, status: :ok
+    user = get_user
+    if user
+      puts 'User found'
+      errand = Errand.find_by(id: params[:id])
+
+      if errand
+        puts "Valid errand found"
+        #Rich hates boolean values in SQL 0 for false, 1 for true
+        errand.completed = 1
+        errand.save
+
+        puts "Updated errand to completed"
+        render nothing: true, status: :ok
+      else
+        puts "Invalid errand #{errand.errors.full_messages}"
+        render nothing: true, status: :bad_request
+      end
+
     else
-      puts "Failed #{errand.errors.full_messages}"
+      puts 'User not found'
       render nothing: true, status: :bad_request
     end
   end

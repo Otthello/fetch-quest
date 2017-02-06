@@ -2,7 +2,9 @@ class SessionsController < ApiController
   skip_before_action :require_login, only: [:create], raise: false
 
   def create
-    if user = User.valid_login?(params[:email], params[:password])
+    user = User.find_by(email: params[:email])
+    if user.authenticate(params[:password])
+      puts 'User found'
       send_auth_token_for_valid_login_of(user)
     else
       render_unauthorized("Error with your login or password")
@@ -11,7 +13,7 @@ class SessionsController < ApiController
 
   def destroy
     logout
-    head :ok
+    render nothing: true, status: :ok
   end
 
   private
@@ -20,11 +22,12 @@ class SessionsController < ApiController
     render json: { token: user.token }
   end
 
-  def allow_token_to_be_used_only_once_for(user)
-    user.regenerate_token
-  end
-
   def logout
     current_user.invalidate_token
+  end
+
+  #Potential future implementation
+  def allow_token_to_be_used_only_once_for(user)
+    user.regenerate_token
   end
 end
