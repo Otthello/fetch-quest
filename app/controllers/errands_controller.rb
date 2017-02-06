@@ -4,16 +4,18 @@ class ErrandsController < ApiController
   include QuestsHelper
   include NpcsHelper
 
-  before_filter :cors_header_check
-
   def index
     p "In Index"
-    errands = get_user_errands
+    p params
+    p "Params Above!!"
+    user = User.find_by(auth_token: params[:key])
     # errands = User.first.errands
-    p errands
+    p user
+    p "USER"
+    p user.errands
     p "These are the errands for the user"
-    if errands.length > 0
-      render json: {status: 'SUCCESS', message: 'Loaded all errands', data: errands}, status: :ok
+    if user.errands.length > 0
+      render json: {status: 'SUCCESS', message: 'Loaded all errands', data: user.errands}, status: :ok
       # render json: {status: 'SUCCESS', message: 'Loaded all errands', data: errands}, status: :ok
     else
       p "sending 422"
@@ -48,6 +50,8 @@ class ErrandsController < ApiController
   end
 
   def update
+    p params
+    p "Params Above!!"
     errand = Errand.find_by(id: params[:id])
     if errand
       errand.completed = 1
@@ -60,10 +64,5 @@ class ErrandsController < ApiController
     end
   end
 
-  def cors_header_check
-    headers['Access-Control-Allow-Origin'] = '*'
-    headers['Access-Control-Allow-Methods'] = 'POST, GET'
-    headers['Access-Control-Request-Method'] = '*'
-    headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-  end
+
 end
