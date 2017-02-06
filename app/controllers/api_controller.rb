@@ -1,8 +1,10 @@
 class ApiController < ApplicationController
-  skip_before_action :verify_access_token
-  # before_filter :cors_header_check
+  before_action :verify_access_key
 
-  def verify_access_token
+  def verify_access_key
+    puts "/" * 60
+    puts [" " * 15, "Checking Access Key".upcase].join('')
+    puts "/" * 60
     Apikey.exists?({access_token: params[:key]})
   end
 
@@ -14,8 +16,6 @@ class ApiController < ApplicationController
    @current_user ||= authenticate_token
   end
 
-  protected
-
   def render_unauthorized(message)
     errors ={errors: [{detail: message}]}
     render json: errors, status: :unauthorized
@@ -23,6 +23,7 @@ class ApiController < ApplicationController
 
   private
 
+  #necessary during early stages of development
   def cors_header_check
     headers['Access-Control-Allow-Origin'] = '*'
     headers['Access-Control-Allow-Methods'] = 'POST, GET'
@@ -31,14 +32,15 @@ class ApiController < ApplicationController
   end
 
   def authenticate_token
-    authenticate_with_http_token do |token, options|
+    puts "/" * 60
+    puts [" " * 15,"authenticating user token".upcase].join('')
+    puts "/" * 60
+    token = params[:token]
       if user = User.with_unexpired_token(token, 2.days.ago)
         ActiveSupport::SecurityUtils.secure_compare(
                         ::Digest::SHA256.hexdigest(token),
                         ::Digest::SHA256.hexdigest(user.token))
-        user
       end
-    end
-
   end
+
 end
