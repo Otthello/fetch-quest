@@ -61,7 +61,7 @@ module BasicSeeder
   end
 
   def self.apikey
-    test = Apikey.new(email: "test@tester.com")
+    test = Apikey.new(email: "test@tester.com", domain: 'tester.com')
     test.save
     puts "/"* 50
     puts "YOUR KEY DON'T LOSE IT!!!!"

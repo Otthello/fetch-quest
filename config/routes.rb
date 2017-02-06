@@ -3,14 +3,10 @@ Rails.application.routes.draw do
   scope '/api' do
     scope '/v1' do
       resources :errands, :except => [:show, :destroy, :new, :edit]
-      scope :format => true, :constraints => { :format => 'json' } do
-        post   "/login"       => "sessions#create"
-        delete "/logout"      => "sessions#destroy"
-      end
-
+        post   "/login"       => "sessions#create", :constraints => { :format => 'json' }
+        delete "/logout"      => "sessions#destroy", :constraints => { :format => 'json' }
     end
   end
-
-  get 'errands',  to: 'errands#index'
+  get '/test', to: 'test#hello'
 
 end
