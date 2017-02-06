@@ -8,7 +8,9 @@ class SessionsController < ApiController
     p user
     p "Printing params-----------------"
     p params
-    if user.authenticate(params[:password])
+    if user == nil
+      render_unauthorized("Error with your login or password")
+    elsif user.authenticate(params[:password])
       puts 'User found'
       send_auth_token_for_valid_login_of(user)
     else
