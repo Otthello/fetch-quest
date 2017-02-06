@@ -4,8 +4,6 @@ class ErrandsController < ApiController
   include QuestsHelper
   include NpcsHelper
 
-  before_filter :cors_header_check
-
   def index
     p "In Index"
     errands = get_user_errands
@@ -60,10 +58,5 @@ class ErrandsController < ApiController
     end
   end
 
-  def cors_header_check
-    headers['Access-Control-Allow-Origin'] = '*'
-    headers['Access-Control-Allow-Methods'] = 'POST, GET'
-    headers['Access-Control-Request-Method'] = '*'
-    headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-  end
+
 end
