@@ -8,12 +8,14 @@ class ErrandsController < ApiController
     p "In Index"
     p params
     p "Params Above!!"
-    errands = User.find_by(auth_token: params[:key])
+    user = User.find_by(auth_token: params[:key])
     # errands = User.first.errands
-    p errands
+    p user
+    p "USER"
+    p user.errands
     p "These are the errands for the user"
-    if errands.length > 0
-      render json: {status: 'SUCCESS', message: 'Loaded all errands', data: errands}, status: :ok
+    if user.errands.length > 0
+      render json: {status: 'SUCCESS', message: 'Loaded all errands', data: user.errands}, status: :ok
       # render json: {status: 'SUCCESS', message: 'Loaded all errands', data: errands}, status: :ok
     else
       p "sending 422"
