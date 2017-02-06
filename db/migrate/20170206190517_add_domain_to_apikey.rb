@@ -1,5 +1,5 @@
 class AddDomainToApikey < ActiveRecord::Migration
   def change
-    add_column(:apikey, :domain, :string)
+    add_column(:apikeys, :domain, :string)
   end
 end
