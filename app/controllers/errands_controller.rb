@@ -6,6 +6,8 @@ class ErrandsController < ApiController
 
   def index
     p "In Index"
+    p params
+    p "Params Above!!"
     errands = get_user_errands
     # errands = User.first.errands
     p errands
@@ -46,6 +48,8 @@ class ErrandsController < ApiController
   end
 
   def update
+    p params
+    p "Params Above!!"
     errand = Errand.find_by(id: params[:id])
     if errand
       errand.completed = 1
