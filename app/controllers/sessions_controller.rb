@@ -2,7 +2,12 @@ class SessionsController < ApiController
   skip_before_action :require_login, only: [:create], raise: false
 
   def create
+    p "Finding User---------------------"
     user = User.find_by(email: params[:email])
+    p "Printing user--------------------"
+    p user
+    p "Printing params-----------------"
+    p params
     if user.authenticate(params[:password])
       puts 'User found'
       send_auth_token_for_valid_login_of(user)
