@@ -8,7 +8,7 @@ class ErrandsController < ApiController
     p "In Index"
     p params
     p "Params Above!!"
-    errands = get_user_errands
+    errands = User.find_by(auth_token: params[:key])
     # errands = User.first.errands
     p errands
     p "These are the errands for the user"
