@@ -1,9 +1,13 @@
 class UsersController < ApiController
   def create
+    p user_deets
     user = User.new(user_deets)
+    p user
     if user.save
+      p "User Saved"
      render json: {user_token: user.auth_token}.to_json, status: :ok
     else
+      p "Bad request"
       render nothing: true, status: :bad_request
     end
   end
@@ -17,7 +21,7 @@ class UsersController < ApiController
   #     render nothing: true, status: :bad_request
   #   end
   # end
-
+  private
   def user_deets
     # p params
     params.permit(:username, :email, :password, :avatar_url)
