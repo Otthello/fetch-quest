@@ -1,107 +1,95 @@
 require 'rails_helper'
 
 RSpec.describe ErrandsController, type: :controller do
-  let(:api){Apikey.create!(email: 'r@spec.co')}
-  let(:errand_info){{
-      task: "Buy snacks from target",
-      lat: "41.876953",
-      lng: "-87.655314",
-      quest_id: 1,
-      npc_id: 1,
-      hero_id: 1,
-      completed: 0
-      }}
-   let(:user_info){{
-      email: "imanemail@mail.com",
-      username: "banana",
-      avatar_url: "bananagram.jpg",
-      password: 'test'
-     }}
+  let(:test_env){TestSeeder.new}
 
-#////////////////////////////////////////
-  let(:api){Apikey.create!(email: 'r@spec.co')}
-  let(:user) { User.create!(
-                username: "MojoJojo",
-                email: "jank@lank.com",
-                password: "asdf",
-                avatar_url: "http://www.website.com")
-              }
-  let (:errand_information) {Errand.create!(
-                  task: "knee",
-                  lat: "5",
-                  lng: "6",
-                  quest_id: 1,
-                  npc_id: 1,
-                  completed: 0)
-                }
+  describe 'GET #index aka request user errands' do
 
-  describe 'GET #index' do
-    it "returns success for get request" do
-      user.errands.create!(errand_information)
-
-      get :index, key: "#{api.access_token}", email: "#{user.email}", password: "#{user.password}"
+    it "returns success for get request with a proper key and token" do
+      test_env.run_all
+      get :index, key: "#{test_env.key}", token: "#{test_env.token}"
       expect(response).to have_http_status(:success)
     end
 
-    it "returns errands for authenticated user" do
-      get :index, key: "#{api.access_token}", email: "#{user.email}", password: "#{user.password}"
-      jsonResponse = { errands: user.errands }.to_json
-
-      expect(response.body).to eq(jsonResponse)
+    it "returns bad request for get request without credentials" do
+      get :index
+      expect(response).to have_http_status(:unauthorized)
     end
+
+    it "returns quests and errands for authenticated user" do
+      test_env.run_all
+      user = User.find(test_env.user_id)
+      jsonResponse = { data: user.errands_and_quests }.to_json
+
+      get :index, key: "#{test_env.key}", token: "#{test_env.token}"
+      expect(response.content_type).to eq("application/json")
+      expect(JSON.parse(response.body)[:data]).to equal(JSON.parse(jsonResponse)[:data])
+    end
+
+    it "returns location and snippets with options location" do
+      test_env.run_all
+      user = User.find(test_env.user_id)
+      snippet = user.errands.collect{|errand| {hook: errand.quest.hook, npc_thumb: errand.npc.avatar_url, lat: errand.lat, lng: errand.lng }}
+      jsonResponse = { data: snippet }.to_json
+
+      get :index, key: "#{test_env.key}", token: "#{test_env.token}", options: "location"
+      expect(response.content_type).to eq("application/json")
+      expect(JSON.parse(response.body)[:data]).to equal(JSON.parse(jsonResponse)[:data])
+    end
+
   end
-#//////////////////////////////////////////////////////////
 
-  describe "put errands#update" do
+  describe "PUT errands#update aka request errand completion" do
+
     it "returns status ok" do
-    
-    User.create(user_info)
+      test_env.run_all
+      put :update, key: "#{test_env.key}", token: "#{test_env.token}", id: "#{test_env.errand_id}"
+      expect(response).to have_http_status(:success)
+    end
 
-    errand = Errand.create!(errand_info)
-
-    put :update, :key => "#{api.access_token}", :id => "#{errand.id}"
-    expect(response).to have_http_status(:success)
+    it "refuses changes from unauthorized users" do
+      test_env.run_all
+      put :update, key: "#{test_env.key}", id: "#{test_env.errand_id}"
+      expect(response).to have_http_status(:unauthorized)
     end
 
     it "changes the complete attribute" do
-      User.create(user_info)
-      errand = Errand.create!(errand_info)
-      before_put = errand.completed
-
-      put :update, :key => "#{api.access_token}", :id => "#{errand.id}"
-      errand = Errand.find(errand.id)
-      
+      test_env.run_all
+      before_put = Errand.find(test_env.errand_id).completed
+      put :update, key: "#{test_env.key}", token: "#{test_env.token}", :id => "#{test_env.errand_id}"
+      errand = Errand.find(test_env.errand_id)
       expect(errand.completed).not_to eq(before_put)
     end
   end
 
-  let(:create_errand){
-    Errand.create!(errand_info)}
-  
-  let(:create_npc){
-    Npc.create!({
-      avatar_url: "http://i.imgur.com/DWTH8wm.png",
-      name: "Ken the Paladin"
-    })
-  }
-  
-  let(:create_quest){
-    Quest.create!({
-      icon_url: "http://i.imgur.com/NlZj5vv.gif",
-      hook: "I don't like that castle.",
-      description: "Ken doesn't like that castle. Destroy it and he'll give you sweet loot"
-    })
-  }
-  let(:errand_data){{latitude: "10.0", longitude: "15.0", task: "deposit check"}}
-  describe "Post #create" do
+
+  describe "Post #create aka store new errand" do
+    # let(:test_env){test_seeder.new}
+    let(:errand_data){{latitude: "10.0", longitude: "15.0", task: "deposit check"}}
+
     it "returns http success" do
-      create_quest
-      create_npc
-
-      post :create, :key => "#{api.access_token}", :latitude=>"#{errand_data[:latitude]}", :longitude => "#{errand_data[:longitude]}", :task => "#{errand_data[:task]}"
-      
+      test_env.run_all
+      user = User.last
+      post :create, key: "#{test_env.key}", token: "#{test_env.token}", :latitude=>"#{errand_data[:latitude]}", :longitude => "#{errand_data[:longitude]}", :task => "#{errand_data[:task]}"
       expect(response).to have_http_status(:success)
+    end
 
+    it "refuses to add a new errand without a token" do
+      test_env.run_all
+      post :create, :key => "#{test_env.key}", :latitude=>"#{errand_data[:latitude]}", :longitude => "#{errand_data[:longitude]}", :task => "#{errand_data[:task]}"
+      expect(response).to have_http_status(:unauthorized)
+    end
+
+    it "stores the new errand" do
+      test_env.run_all
+      user = User.last
+      post :create, key: "#{test_env.key}", token: "#{test_env.token}", :latitude=>"#{errand_data[:latitude]}", :longitude => "#{errand_data[:longitude]}", :task => "#{errand_data[:task]}"
+      errand = Errand.last
+
+      expect(errand.lat).to eq(errand_data[:latitude])
+      expect(errand.lng).to eq(errand_data[:longitude])
+      expect(errand.task).to eq(errand_data[:task])
+      expect(errand.hero_id).to eq(user.id)
     end
   end
 

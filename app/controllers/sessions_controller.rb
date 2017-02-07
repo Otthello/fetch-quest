@@ -2,12 +2,16 @@ class SessionsController < ApiController
   skip_before_action :require_login, only: [:create], raise: false
 
   def create
-    user = User.find_by(email: params[:email])
-    if user.authenticate(params[:password])
-      puts 'User found'
-      send_auth_token_for_valid_login_of(user)
+    if verify_access_key
+      user = User.find_by(email: params[:email])
+      if user && user.authenticate(params[:password])
+        puts 'User found'
+        send_auth_token_for_valid_login_of(user)
+      else
+        render nothing: true, status: :bad_request, msg:"Error with your login or password"
+      end
     else
-      render_unauthorized("Error with your login or password")
+      render nothing: true, status: :unauthorized
     end
   end
 
