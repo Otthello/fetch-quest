@@ -10,17 +10,22 @@ RSpec.describe UsersController, type: :controller do
       keyed_user_data = user_data
       keyed_user_data[:key] = test_env.key
       post :create, keyed_user_data
+
       expect(response).to have_http_status(:success)
     end
 
-    it "returns a json auth_token" do
+    it "returns a usable json auth_token" do
       keyed_user_data = user_data
       keyed_user_data[:key] = test_env.key
       post :create, keyed_user_data
-      user = User.find(test_env.user_id)
-      jsonResponse = {user_token: user.auth_token}.to_json
+
       expect(response.content_type).to eq("application/json")
-      expect(response.body).to eq(jsonResponse)
+
+      jsonResponse = JSON.parse(response.body).values.first
+      user = User.find_by(auth_token: jsonResponse)
+
+      expect(user).not_to be_nil
+      expect(user).to be_instance_of(User)
     end
 
     it "returns http unauthorized without api key" do
@@ -32,9 +37,11 @@ RSpec.describe UsersController, type: :controller do
       before_count = User.count
       keyed_user_data = user_data
       keyed_user_data[:key] = test_env.key
+
       post :create, keyed_user_data
+
       after_count = User.count
-      expect(before_count).to be_less_than(after_count)
+      expect(before_count).to be < (after_count)
     end
   end
 end

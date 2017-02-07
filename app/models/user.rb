@@ -19,10 +19,10 @@ class User < ActiveRecord::Base
     self.auth_token
   end
 
-  def token=(new_token)
-    self.auth_token = new_token
-    put "we're making a new auth token with the jank way"
-  end
+  # def token=(new_token)
+  #   self.auth_token = new_token
+  #   put "we're making a new auth token with the jank way"
+  # end
 
   def self.with_unexpired_token(token, period)
     User.where(auth_token: token).where('token_created_at >= ?', period).first
