@@ -5,10 +5,10 @@ class UsersController < ApiController
     p user
     if user.save
       p "User Saved"
-     render json: {user_token: user.auth_token}.to_json, status: :ok
+     render json: {token: user.auth_token}.to_json, status: :ok
     else
       p "Bad request"
-      render nothing: true, status: :bad_request
+      render json: {error: user.errors.full_messages}.to_json, status: :bad_request
     end
   end
 
