@@ -1,40 +1,40 @@
 require 'rails_helper'
 
 RSpec.describe UsersController, type: :controller do
-    let(:api){Apikey.create!(email: 'r@spec.co')}
-    let(:user_data){{email: "imanemail@mail.com", username: "banana", avatar_url: "bananagram.jpg"}}
+    let(:test_env){TestSeeder.new}
+    let(:user_data){{email: "imanemail@mail.com", username: "banana", password: "password", avatar_url: "http://www.imgur.com/bananagram.jpg"}}
 
   describe "Post #create" do
+    before(:each){test_env.run_all}
     it "returns http success" do
-      post :create, :key => "#{api.access_token}", :username=>"#{user_data[:username]}", :email => "#{user_data[:email]}", :avatar_url => "#{user_data[:avatar_url]}"
+      keyed_user_data = user_data
+      keyed_user_data[:key] = test_env.key
+      post :create, keyed_user_data
       expect(response).to have_http_status(:success)
     end
 
     it "returns a json auth_token" do
-      post :create, :key => "#{api.access_token}", :username=>"#{user_data[:username]}", :email => "#{user_data[:email]}", :avatar_url => "#{user_data[:avatar_url]}"
-      jsonResponse = {user_token: User.last.auth_token}.to_json
-      # puts response.body
+      keyed_user_data = user_data
+      keyed_user_data[:key] = test_env.key
+      post :create, keyed_user_data
+      user = User.find(test_env.user_id)
+      jsonResponse = {user_token: user.auth_token}.to_json
       expect(response.content_type).to eq("application/json")
       expect(response.body).to eq(jsonResponse)
     end
-  end
 
-  describe "Post #auth" do
-
-    it "returns http success" do
-      user = User.create!(user_data)
-      post :auth, :key => "#{api.access_token}", :email => "#{user_data[:email]}"
-
-      expect(response).to have_http_status(:success)
+    it "returns http unauthorized without api key" do
+      post :create, user_data
+      expect(response).to have_http_status(:unauthorized)
     end
 
-    it "returns the users auth_token" do
-      user = User.create!(user_data)
-      jsonResponse = {user_token: user.auth_token}.to_json
-      post :auth, :key => "#{api.access_token}", :email => "#{user_data[:email]}"
-      expect(response.body).to eq(jsonResponse)
+    it "stores a new user in the database" do
+      before_count = User.count
+      keyed_user_data = user_data
+      keyed_user_data[:key] = test_env.key
+      post :create, keyed_user_data
+      after_count = User.count
+      expect(before_count).to be_less_than(after_count)
     end
-
   end
-
 end
