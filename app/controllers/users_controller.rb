@@ -2,7 +2,6 @@ class UsersController < ApiController
   def create
     user = User.new(user_deets)
     if user.save
-      # puts user.auth_token
      render json: {user_token: user.auth_token}.to_json, status: :ok
     else
       render nothing: true, status: :bad_request
