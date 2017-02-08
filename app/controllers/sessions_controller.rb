@@ -23,15 +23,14 @@ class SessionsController < ApiController
   private
 
   def send_auth_token_for_valid_login_of(user)
-    render json: { token: user.token }
+    if user.regenerate_token
+      render json: { token: user.auth_token }
+    else
+      render nothing: true, status: :internal_server_error, msg: "Error with user credentials"
+    end
   end
 
   def logout
     current_user.invalidate_token
-  end
-
-  #Potential future implementation
-  def allow_token_to_be_used_only_once_for(user)
-    user.regenerate_token
   end
 end

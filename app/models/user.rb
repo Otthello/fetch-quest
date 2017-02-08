@@ -16,14 +16,18 @@ class User < ActiveRecord::Base
     self.update_columns(auth_token: nil)
   end
 
-  def token
-    self.auth_token
-  end
+  # def token
+  #   self.auth_token
+  # end
 
   # def token=(new_token)
   #   self.auth_token = new_token
   #   put "we're making a new auth token with the jank way"
   # end
+  def regenerate_token
+    self.auth_token = User.generate_unique_secure_token
+    self.save
+  end
 
   def self.with_unexpired_token(token, period)
     User.where(auth_token: token).where('token_created_at >= ?', period).first
