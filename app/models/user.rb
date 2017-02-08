@@ -1,6 +1,6 @@
 class User < ActiveRecord::Base
   has_many :errands, foreign_key: 'hero_id'
-  has_many :equips
+  has_many :equips, foreign_key: 'owner_id'
   has_many :quests, through: :errands
 
  has_secure_password
