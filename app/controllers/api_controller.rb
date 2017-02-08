@@ -39,7 +39,7 @@ class ApiController < ApplicationController
       if user = User.with_unexpired_token(token, 2.days.ago)
         ActiveSupport::SecurityUtils.secure_compare(
                         ::Digest::SHA256.hexdigest(token),
-                        ::Digest::SHA256.hexdigest(user.token))
+                        ::Digest::SHA256.hexdigest(user.auth_token))
       end
   end
 
