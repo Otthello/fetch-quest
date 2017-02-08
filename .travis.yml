@@ -9,3 +9,4 @@ script:
   - bundle exec rake db:test:prepare
   - bundle exec rake db:migrate
   - bundle exec rake spec:controllers
+  - bundle exec rake spec:models

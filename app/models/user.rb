@@ -2,6 +2,7 @@ class User < ActiveRecord::Base
   has_many :errands, foreign_key: 'hero_id'
   has_many :equips, foreign_key: 'owner_id'
   has_many :quests, through: :errands
+  has_many :items, through: :equips, source: :lootable, source_type: 'Item'
 
  has_secure_password
  has_secure_token :auth_token
@@ -33,7 +34,7 @@ class User < ActiveRecord::Base
   end
 
   def incompleted_errand_locations
-    self.errands.where(completed: 0).collect{|errand| {lat: errand.lat, lng: errand.lng, hook: errand.quest.hook, npc_thumb: errand.npc.avatar_url}}
+    self.errands.where(completed: 0).collect{|errand| {lat: errand.lat, lng: errand.lng, hook: errand.quest.hook, npc_thumb: errand.npc.avatar_url, id: errand.id}}
   end
 
   def errands_and_quests

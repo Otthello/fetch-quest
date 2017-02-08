@@ -10,6 +10,6 @@ require 'rails_helper'
 #     end
 #   end
 # end
-RSpec.describe EquipHelper, type: :helper do
+RSpec.describe EquipsHelper, type: :helper do
   pending "add some examples to (or delete) #{__FILE__}"
 end
