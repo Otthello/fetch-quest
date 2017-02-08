@@ -24,10 +24,10 @@ RSpec.describe SessionsController, type: :controller do
     it "returns a token on successful login" do
       keyed_user_data = {password: user_data[:password], email: user_data[:email]}
       keyed_user_data[:key] = test_env.key
-      jsonResponse = {data: {token: User.last.auth_token}}.to_json
+      jsonResponse = {token: User.last.auth_token}.to_json
       post :create, keyed_user_data
       expect(response.content_type).to eq("application/json")
-      expect(JSON.parse(response.body)[:data]).to equal(JSON.parse(jsonResponse)[:data])
+      expect(response.body).to eq(jsonResponse)
     end
 
     it "return bad request when no password match is found" do
