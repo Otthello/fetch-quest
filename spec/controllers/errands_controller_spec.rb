@@ -23,18 +23,19 @@ RSpec.describe ErrandsController, type: :controller do
 
       get :index, key: "#{test_env.key}", token: "#{test_env.token}"
       expect(response.content_type).to eq("application/json")
-      expect(JSON.parse(response.body)[:data]).to equal(JSON.parse(jsonResponse)[:data])
+
+      expect(JSON.parse(response.body).fetch("data")).to eq(JSON.parse(jsonResponse).fetch("data"))
     end
 
     it "returns location and snippets with options location" do
       test_env.run_all
       user = User.find(test_env.user_id)
-      snippet = user.errands.collect{|errand| {hook: errand.quest.hook, npc_thumb: errand.npc.avatar_url, lat: errand.lat, lng: errand.lng }}
+      snippet = user.errands.collect{|errand| {hook: errand.quest.hook, npc_thumb: errand.npc.avatar_url, lat: errand.lat, lng: errand.lng, id: errand.id}}
       jsonResponse = { data: snippet }.to_json
 
       get :index, key: "#{test_env.key}", token: "#{test_env.token}", options: "location"
       expect(response.content_type).to eq("application/json")
-      expect(JSON.parse(response.body)[:data]).to equal(JSON.parse(jsonResponse)[:data])
+      expect(JSON.parse(response.body).fetch("data")).to eq(JSON.parse(jsonResponse).fetch("data"))
     end
 
   end
