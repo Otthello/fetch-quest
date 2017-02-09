@@ -6,7 +6,7 @@ Rails.application.routes.draw do
       resources :errands, :except => [:show, :destroy, :new, :edit]
       post   "/login"       => "sessions#create", :constraints => { :format => 'json' }
       delete "/logout"      => "sessions#destroy", :constraints => { :format => 'json' }
-      resources :equips, :only => [:index]
+      resources :equips, :only => [:index, :create]
     end
   end
   get '/test', to: 'test#hello'
