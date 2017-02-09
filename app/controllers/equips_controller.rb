@@ -22,4 +22,6 @@ class EquipsController < ApiController
     end
   end
 
+
+
 end
