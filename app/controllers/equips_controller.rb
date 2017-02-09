@@ -22,6 +22,22 @@ class EquipsController < ApiController
     end
   end
 
+  def create
+    user = get_user
+    random_loot_id = Item.find(rand(Item.all.count))
 
-
+    if user
+      equip = Equip.new(owner_id: get_user.id,
+                           lootable_type: "Item",
+                           lootable_id: random_loot_id)
+      if equip.save
+        user.equips << equip
+        puts "User #{user.username} has acquired #{Item.find(user.equips.last.lootable_id)}"
+      else
+        puts "Loot was not equipped :("
+      end
+    else
+      puts "Cannot find user"
+    end
+  end
 end
