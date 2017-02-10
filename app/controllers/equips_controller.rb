@@ -24,7 +24,8 @@ class EquipsController < ApiController
 
   def create
     user = get_user
-    random_loot_id = Item.order("RANDOM()").first.id
+    random_item =  Item.order("RANDOM()").first;
+    random_loot_id = random_item.id;
 
     if user
       equip = Equip.new(owner_id: get_user.id,
@@ -34,7 +35,7 @@ class EquipsController < ApiController
         user.equips << equip
         puts "User #{user.username} has acquired #{Item.find(user.equips.last.lootable_id)}"
 
-        render json: {status: 'SUCCESS', message: 'Equipped user with random loot.', data: user.equips.last}, status: :ok
+        render json: {status: 'SUCCESS', message: 'Equipped user with random loot.', data: random_item}, status: :ok
       else
         puts "Loot was not equipped :("
         render nothing: true, status: :bad_request
