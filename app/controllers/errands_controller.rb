@@ -40,7 +40,7 @@ class ErrandsController < ApiController
         lng: params[:longitude],
         npc_id: get_rand_npc.id,
         hero_id: user.id,
-        completed: false
+        completed: 0
       }
 
       puts ["Making a new errand with values:", "\n", "#{errand_info_hash}"].join("")
